@@ -33,96 +33,28 @@ but I think I'll get better at it in time.
 I did the RGB LED example in the exercise session, and I must say, the more I
 work with C++, the more I miss how Rust, my favorite systems language, makes
 writing robust code so much easier. For example, for the color fading, I
-implemented an HSV to RGB function to smoothly transition over the color wheel:
-
-```c
-#include <math.h>
-
-struct color {
-    float a;
-    float b;
-    float c;
-};
-
-struct color hsv_to_rgb(struct color *hsv) {
-    float c = hsv->c * hsv->b;
-    float h = hsv->a / 60.0f;
-    float x = c * (1.0f - fabsf(fmodf(h, 2.0f) - 1.0f));
-    float m = hsv->c - c;
-
-    struct color rgb;
-
-    if (0.0f <= h && h < 1.0f) {
-        rgb.a = x; rgb.b = c; rgb.c = 0.0f;
-    } else if (1.0f <= h && h < 2.0f) {
-        rgb.a = c; rgb.b = x; rgb.c = 0.0f;
-    } else if (2.0f <= h && h < 3.0f) {
-        rgb.a = 0.0f; rgb.b = c; rgb.c = x;
-    } else if (3.0f <= h && h < 4.0f) {
-        rgb.a = 0.0f; rgb.b = x; rgb.c = c;
-    } else if (4.0f <= h && h < 5.0f) {
-        rgb.a = x; rgb.b = 0.0f; rgb.c = c;
-    } else {
-        rgb.a = c; rgb.b = 0.0f; rgb.c = x;
-    }
-
-    rgb.a += m;
-    rgb.b += m;
-    rgb.c += m;
-
-    return rgb;
-}
-```
-
-Arduino C++ doesn't seem to have the STL available, so this is technically just
-pure C. But just by looking, it's obvious that the language is highly verbose,
-yet some properties are still unclear (for example, the exact size of a
-`float`). Now, let's look at the Rust equivalent:
-
-```rust
-#[derive(Clone, Copy)]
-enum Color {
-    Hsv(f32, f32, f32),
-    Rgb(f32, f32, f32),
-}
-
-impl Color {
-    pub fn to_rgb(self) -> Self {
-        match self {
-            Self::Rgb(..) => self,
-            Self::Hsv(h, s, v) => {
-                let c = v * s;
-                let h = h / 60.0;
-                let x = c * (1.0 - (h % 2.0 - 1.0).abs());
-                let m = v - c;
-
-                match h {
-                    0.0..1.0 => Self::Rgb(x + m, c + m, m),
-                    1.0..2.0 => Self::Rgb(c + m, x + m, m),
-                    2.0..3.0 => Self::Rgb(m, c + m, x + m),
-                    3.0..4.0 => Self::Rgb(m, x + m, c + m),
-                    4.0..5.0 => Self::Rgb(x + m, m, c + m),
-                    _ => Self::Rgb(c + m, m, x + m)
-                }
-            }
-        }
-    }
-}
-```
-
-We can immediately see several improvements: different color spaces are now
-explicit, it's clear how big each color channel is (`f32` is 32 bits wide),
+implemented an HSV to RGB function to smoothly transition over the color wheel
+in Arduino C++ (see Figure 2). The platform doesn't seem to have the STL
+available, so this is technically just pure C. But just by looking, it's obvious
+that the language is highly verbose, yet some properties are still unclear (for
+example, the exact size of a `float`). On the other hand, the Rust
+implementation (see Figure 3) is significantly nicer: different color spaces are
+now explicit, it's clear how big each color channel is (`f32` is 32 bits wide),
 the compiler will ~~yell at~~ tell you if you forget to handle additional color
 spaces should they be added, and also if you forget to account for the entire
-value range (see the `match h` block) through `match` statements. Rust is also
-an expression-based language, so there's no tangled mutation needed. And because
-additional compile-time guarantees inherent to the language, as well as the fact
-that the compiler is built upon LLVM, compiled Rust binaries are usually just as
-fast, if not faster, than equivalent C/C++ code, while having guaranteed memory
-safety if (explicitly annotated) `unsafe` code is absent. All this makes Rust,
-at least to me, the future of embedded programming, especially with libraries
-like Embassy, which provides "unprecedentedly easy and efficient multitasking in
-embedded systems" (The Embassy authors, 2019).
+value range (see the `match h` block) through `match` statements.
+Rust is also an expression-based language, so there's no tangled mutation
+needed. And because additional compile-time guarantees inherent to the language,
+as well as the fact that the compiler is built upon LLVM, compiled Rust binaries
+are usually just as fast, if not faster, than equivalent C/C++ code, while
+having guaranteed memory safety if (explicitly annotated) `unsafe` code is
+absent. All this makes Rust, at least to me, the future of embedded programming,
+especially with libraries like Embassy, which provides "unprecedentedly easy and
+efficient multitasking in embedded systems" (The Embassy authors, 2019).
+
+![Arduino C++ implementation of the HSV-to-RGB conversion](../imgs/week2_3.png){height=90%}
+
+![Rust implementation of the HSV-to-RGB conversion](../imgs/week2_2.png)
 
 <div style="page-break-after: always;">\newpage</div>
 
