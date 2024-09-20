@@ -2,7 +2,7 @@
 
 Week 2, 13/09/2024  
 DTEP 24  
-Le Quang Dat
+Le Quang Dat  
 
 ## Foreword
 
