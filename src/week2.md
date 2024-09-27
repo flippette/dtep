@@ -2,7 +2,7 @@
 
 Week 2, 13/09/2024  
 DTEP 24  
-Le Quang Dat  
+Le Quang Dat
 
 ## Foreword
 
@@ -56,7 +56,7 @@ efficient multitasking in embedded systems" (The Embassy authors, 2019).
 
 ![Rust implementation of the HSV-to-RGB conversion](../imgs/week2_2.png)
 
-<div style="page-break-after: always;">\newpage</div>
+\newpage
 
 ## References
 

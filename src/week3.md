@@ -144,10 +144,11 @@ designed so that a single act by a single person could cause calamity?". To
 think that a book about design could fit so well when discussing a programming
 language, truly goes to show the ever-present importance of good design.
 
-<div style="page-break-after: always;">\newpage</div>
+\newpage
 
 ## References
 
 [1] Wikipedia editors, _Morse code_, Wikipedia. <https://en.wikipedia.org/wiki/Morse_code#Alternative_display_of_common_characters_in_International_Morse_code> (accessed September 20, 2024).
 
-[2] D. Norman, _The Design of Everyday Things: Revised and Expanded Edition_. Massachusetts, USA: MIT Press, 2013.
+[2] D. Norman, _The Design of Everyday Things: Revised and Expanded Edition_.
+Massachusetts, USA: MIT Press, 2013.
